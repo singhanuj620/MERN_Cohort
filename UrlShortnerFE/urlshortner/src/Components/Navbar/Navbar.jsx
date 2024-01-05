@@ -1,8 +1,24 @@
+import { useEffect, useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+import Cookies from 'js-cookie';
+import { useLocation } from 'react-router-dom';
 
 const NavbarComponent = () => {
+
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false)
+
+  const location = useLocation();
+  useEffect(() => {
+    const jwtToken = Cookies.get("jwtToken")
+    if(jwtToken){
+      setIsUserLoggedIn(true)
+    }
+    else{
+      setIsUserLoggedIn(false)
+    }
+  },[location])
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
@@ -11,8 +27,9 @@ const NavbarComponent = () => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link href="/">Home</Nav.Link>
-            <Nav.Link href="/login">Login</Nav.Link>
-            <Nav.Link href="/signup">Signup</Nav.Link>
+            {!isUserLoggedIn && <Nav.Link href="/login">Login</Nav.Link>}
+            {isUserLoggedIn && <Nav.Link href="/logout">Logout</Nav.Link>}
+            {!isUserLoggedIn && <Nav.Link href="/signup">Signup</Nav.Link>}
           </Nav>
         </Navbar.Collapse>
         <Navbar.Collapse className="justify-content-end">
