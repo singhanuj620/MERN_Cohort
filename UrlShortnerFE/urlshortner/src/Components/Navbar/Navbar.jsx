@@ -19,6 +19,13 @@ const NavbarComponent = () => {
       setIsUserLoggedIn(false)
     }
   },[location])
+
+  const handleLogout = () => {
+    Cookies.remove("jwtToken")
+    setIsUserLoggedIn(false)
+    window.location.replace('/login');
+  }
+
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
@@ -28,7 +35,7 @@ const NavbarComponent = () => {
           <Nav className="me-auto">
             <Nav.Link href="/">Home</Nav.Link>
             {!isUserLoggedIn && <Nav.Link href="/login">Login</Nav.Link>}
-            {isUserLoggedIn && <Nav.Link href="/logout">Logout</Nav.Link>}
+            {isUserLoggedIn && <Navbar.Text style={{cursor: "pointer"}} onClick={handleLogout}>Logout</Navbar.Text>}
             {!isUserLoggedIn && <Nav.Link href="/signup">Signup</Nav.Link>}
           </Nav>
         </Navbar.Collapse>
