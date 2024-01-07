@@ -46,11 +46,9 @@ app.post("/short", verifyUser, async (req,res) => {
     })
     const data = await newShortUrlUrlShortner.save()
     return res.json({
-        data : {
             id : data._id,
             shortUrl: data.shortUrl,
             longUrl: data.longUrl
-        }
     })
 })
 
