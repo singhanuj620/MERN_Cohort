@@ -32,6 +32,7 @@ const Homepage = () => {
           console.log(resp)
           setIsError(false)
           setErrorMsg()
+          window.location.replace(`/profile?abc=123`);
         } 
     }
 
