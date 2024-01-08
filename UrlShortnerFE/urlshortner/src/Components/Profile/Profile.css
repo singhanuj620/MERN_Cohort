@@ -1,0 +1,37 @@
+.newShortUrl-container{
+    padding: 2rem;
+}
+
+.newShortUrl-title{
+    font-weight: 600;
+    font-size: 3rem;
+}
+
+.newShortUrl-url{
+    margin-top: 2%;
+    font-size: 1.8rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    background-color: white;
+    border-radius: 5px;
+    padding: 1% 0%;
+}
+
+.newShortUrl-btns{
+    margin: 0% 3%;
+}
+
+.allurl-container{
+    padding: 2rem;
+}
+
+.allurl-title{
+    font-weight: 600;
+    font-size: 3rem;
+}
+
+.allurl-table{
+    padding: 2%;
+    max-height: 20px;
+}

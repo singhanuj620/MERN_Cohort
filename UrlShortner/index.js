@@ -57,7 +57,14 @@ app.get("/geturl/:shortUrl",verifyUser, async (req,res) => {
     const findLongUrl = await UrlShortner.findOne({shortUrl})
     console.log(findLongUrl)
     return res.json({
-        data : findLongUrl
+        findLongUrl
+    })
+})
+
+app.get("/getallurl",verifyUser, async (req,res) => {
+    const getAllUrl = await UrlShortner.find({})
+    return res.json({
+        getAllUrl : [...getAllUrl]
     })
 })
 
