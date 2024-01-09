@@ -33,10 +33,21 @@ const NavbarComponent = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="/">Home</Nav.Link>
-            {!isUserLoggedIn && <Nav.Link href="/login">Login</Nav.Link>}
-            {isUserLoggedIn && <Navbar.Text style={{cursor: "pointer"}} onClick={handleLogout}>Logout</Navbar.Text>}
-            {!isUserLoggedIn && <Nav.Link href="/signup">Signup</Nav.Link>}
+            {!isUserLoggedIn && 
+              <>
+                <Nav.Link href="/login">Login</Nav.Link>
+                <Nav.Link href="/signup">Signup</Nav.Link>
+              </>
+            }
+            {isUserLoggedIn && 
+              <>
+                <Nav.Link href="/short">Short</Nav.Link>
+                &nbsp;&nbsp;
+                <Nav.Link href="/profile">Profile</Nav.Link>
+                &nbsp;&nbsp;
+                <Navbar.Text style={{cursor: "pointer"}} onClick={handleLogout}>Logout</Navbar.Text>
+              </>
+            }
           </Nav>
         </Navbar.Collapse>
         <Navbar.Collapse className="justify-content-end">

@@ -48,6 +48,10 @@ const Homepage = () => {
     <Button variant="primary" onClick={handleShort}>
       Submit
     </Button>
+      &nbsp;&nbsp;&nbsp;
+    <Button variant="outline-warning" onClick={() => window.location.replace("/profile")}>
+      View all URLs
+    </Button>
   </Form>
   </div>
   {isError && <div className='login-alert'>

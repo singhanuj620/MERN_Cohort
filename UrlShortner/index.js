@@ -27,6 +27,8 @@ const verifyUser = (req,res,next) => {
             })
         }
         jwt.verify(authorization, process.env.JWT_SECRET)
+        const username = jwt.decode(authorization)
+        req.username = username
         next()
     } catch(err){
         console.log(err)
@@ -41,30 +43,38 @@ app.post("/short", verifyUser, async (req,res) => {
     const {longUrl} = req.body
     const newShortUrlUrlShortner = new UrlShortner({
         longUrl,
-        shortUrl: nanoid(),
-        hits: 0
+        shortUrl: nanoid()
     })
-    const data = await newShortUrlUrlShortner.save()
+    const newUrl = await newShortUrlUrlShortner.save()
+    const userData = await User.findOne({username: req.username.username})
+    userData.url.push(newUrl._id)
+    await userData.save()
     return res.json({
-            id : data._id,
-            shortUrl: data.shortUrl,
-            longUrl: data.longUrl
+            id : newUrl._id,
+            shortUrl: newUrl.shortUrl,
+            longUrl: newUrl.longUrl
     })
 })
 
-app.get("/geturl/:shortUrl",verifyUser, async (req,res) => {
+app.get("/geturl/:shortUrl", async (req,res) => {
     const {shortUrl} = req.params
     const findLongUrl = await UrlShortner.findOne({shortUrl})
-    console.log(findLongUrl)
-    return res.json({
-        findLongUrl
-    })
+    if(findLongUrl){
+        return res.json({
+            findLongUrl
+        })
+    }
+    else{
+        return res.json({
+            msg: "No such short url found"
+        })
+    }
 })
 
 app.get("/getallurl",verifyUser, async (req,res) => {
-    const getAllUrl = await UrlShortner.find({})
+    const getAllUrl = await User.findOne({username: req.username.username}).populate("url")
     return res.json({
-        getAllUrl : [...getAllUrl]
+        getAllUrl : getAllUrl.url.sort((a,b) => b.createdAt - a.createdAt)
     })
 })
 
@@ -100,8 +110,7 @@ app.post("/login", async (req,res) => {
     }
 
     const jwtToken = jwt.sign({
-        username,
-        url: []
+        username
     }, process.env.JWT_SECRET)
 
     res.cookie("jwtToken", jwtToken)

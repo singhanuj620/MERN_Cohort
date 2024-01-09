@@ -4,7 +4,10 @@ const { Schema } = mongoose;
 const urlShortnerSchema = new Schema({
   longUrl: String,
   shortUrl: String,
-  hits: Number
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
 });
 
 export const UrlShortner = mongoose.model('UrlShortner', urlShortnerSchema)
