@@ -1,100 +1,108 @@
-import './Profile.css'
-import axios from 'axios'
-import { useState, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
-import Cookies from 'js-cookie';
-import Button from 'react-bootstrap/Button';
-import Table from 'react-bootstrap/Table';
+import "./Profile.css";
+import axios from "axios";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import Cookies from "js-cookie";
+import Button from "react-bootstrap/Button";
+import Table from "react-bootstrap/Table";
 
 const Profile = () => {
-  const location = useLocation()
-  const [isNewUrl, setIsNewUrl] = useState(false)
-  const [newUrl, setNewUrl] = useState()
-  const [allUrl, setAllUrl] = useState()
-  const [isError, setIsError] = useState(false)
-  const [errorMsg, setErrorMsg] = useState()
+  const location = useLocation();
+  const [isNewUrl, setIsNewUrl] = useState(false);
+  const [newUrl, setNewUrl] = useState();
+  const [allUrl, setAllUrl] = useState();
+  const [isError, setIsError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState();
 
   useEffect(() => {
-    const getNewUrl = new URLSearchParams(location.search).get("shorturl")
-    if(getNewUrl) {
-      setIsNewUrl(true)
-      setNewUrl(getNewUrl)
+    const getNewUrl = new URLSearchParams(location.search).get("shorturl");
+    if (getNewUrl) {
+      setIsNewUrl(true);
+      setNewUrl(getNewUrl);
     }
-  },[])
+  }, []);
 
   const handleGetAllUrl = async () => {
     const resp = await axios({
-      method: 'GET',
+      method: "GET",
       url: `${import.meta.env.VITE_BACKEND_DOMAIN}/getallurl`,
       headers: {
-        Authorization : Cookies.get("jwtToken")
-      }
-    })
-    if(resp && resp?.data && resp?.data?.msg){
-      setIsError(true)
-      setErrorMsg(resp.data.msg)
+        Authorization: Cookies.get("jwtToken"),
+      },
+    });
+    if (resp && resp?.data && resp?.data?.msg) {
+      setIsError(true);
+      setErrorMsg(resp.data.msg);
+    } else {
+      setAllUrl(resp.data.getAllUrl);
+      setIsError(false);
+      setErrorMsg();
     }
-    else {
-      setAllUrl(resp.data.getAllUrl)
-      setIsError(false)
-      setErrorMsg()
-    } 
-  }
+  };
 
   useEffect(() => {
-    handleGetAllUrl()
-  },[])
+    handleGetAllUrl();
+  }, []);
 
   return (
     <div>
-      {
-        isNewUrl && 
-        <div className='newShortUrl-container'>
-          <div className='newShortUrl-title'>
-            Your new short URL is :
-          </div>
-          <div className='newShortUrl-url'>
-            <div>
-              {`${import.meta.env.VITE_BACKEND_DOMAIN}/${newUrl}`}
-            </div>
-            <div className='newShortUrl-btns'>
+      {isNewUrl && (
+        <div className="newShortUrl-container">
+          <div className="newShortUrl-title">Your new short URL is :</div>
+          <div className="newShortUrl-url">
+            <div>{`${import.meta.env.VITE_BACKEND_DOMAIN}/${newUrl}`}</div>
+            <div className="newShortUrl-btns">
               <Button variant="info">Visit</Button>
               &nbsp;&nbsp;&nbsp;
               <Button variant="primary">Copy</Button>
             </div>
           </div>
         </div>
-      }
+      )}
 
-      <div className='allurl-container'>
-        <div className='allurl-title'>
-          Your all short URLs :
-        </div>
-        <div className='allurl-table'>
-          <Table striped bordered hover>
-            <thead>
+      <div className="allurl-container">
+        <div className="allurl-title">Your all short URLs :</div>
+        <div className="allurl-table table-wrapper-scroll-y my-custom-scrollbar table-responsive">
+          <Table
+            className="table table-bordered table-striped mb-0"
+            striped
+            bordered
+            hover
+            width="200"
+            height="200"
+            tdstyle={{ whitespace: "normal", wordwrap: "break-word" }}
+            rowstyle={{
+              backgroundColor: "#c8e6c9",
+              height: "70px",
+              padding: "5px 0",
+            }}
+          >
+            <thead className="table-thead">
               <tr>
-                <th>#</th>
-                <th>Long Url</th>
-                <th>Short Url</th>
-                <th>Action</th>
+                <th scope="col">#</th>
+                <th scope="col">Long Url</th>
+                <th scope="col">Short Url</th>
+                <th scope="col">Action</th>
               </tr>
             </thead>
             <tbody>
-              {allUrl && allUrl.map((url,ind) => (
-                <tr key={ind}>
-                  <td>{ind}</td>
-                  <td>{url.longUrl}</td>
-                  <td>{url.shortUrl}</td>
-                  <td><Button variant="info">Visit</Button></td>
-                </tr>
-              ))}
+              {allUrl &&
+                allUrl.map((url, ind) => (
+                  <tr key={ind}>
+                    <td>{ind}</td>
+                    <td>{url.longUrl}</td>
+                    <td>{url.shortUrl}</td>
+                    <td>
+                      <Button variant="info">Visit</Button>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </Table>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;
